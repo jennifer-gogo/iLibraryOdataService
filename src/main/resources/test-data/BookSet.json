@@ -1,0 +1,20 @@
+[
+    {
+        "Author": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "BookID": "101",
+        "BookName": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "Category": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "Description": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+        "ISBN": "ABCDEFGHIJKLMNOPQRST",
+        "Publisher": "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+        "Author": null,
+        "BookID": "102",
+        "BookName": "XYZ",
+        "Category": null,
+        "Description": null,
+        "ISBN": "XYZ",
+        "Publisher": null
+    }
+]

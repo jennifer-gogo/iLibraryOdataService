@@ -1,0 +1,6 @@
+/logs
+/target
+/vocabularies
+/src/main/java/ilibrary/ns/base
+/src/main/java/ilibrary/ns/proxy
+/.tomcat

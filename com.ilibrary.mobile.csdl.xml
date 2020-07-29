@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx" xmlns:edmx4="http://docs.oasis-open.org/odata/ns/edmx" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+    <edmx4:Reference Uri="vocabularies/com.sap.cloud.server.odata.sql.v1.xml">
+        <edmx4:Include Namespace="com.sap.cloud.server.odata.sql.v1" Alias="SQL"/>
+    </edmx4:Reference>
+    <edmx:DataServices m:DataServiceVersion="2.0">
+        <Schema Namespace="ilibrary.ns" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+            <EntityType Name="Book">
+                <Key>
+                    <PropertyRef Name="BookID"/>
+                </Key>
+                <Property Name="Author" Type="Edm.String" Nullable="true" MaxLength="100"/>
+                <Property Name="BookID" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="BookName" Type="Edm.String" Nullable="false" MaxLength="100"/>
+                <Property Name="Category" Type="Edm.String" Nullable="true" MaxLength="100"/>
+                <Property Name="Description" Type="Edm.String" Nullable="true" MaxLength="500"/>
+                <Property Name="ISBN" Type="Edm.String" Nullable="false" MaxLength="20"/>
+                <Property Name="Publisher" Type="Edm.String" Nullable="true" MaxLength="100"/>
+                <NavigationProperty Name="Lendings" Relationship="Self.Book_to_Lendings" FromRole="BookDependent" ToRole="LendingPrincipal"/>
+            </EntityType>
+            <EntityType Name="Lending">
+                <Key>
+                    <PropertyRef Name="LendingID"/>
+                </Key>
+                <Property Name="BookID" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="BorrowDate" Type="Edm.DateTimeOffset" Nullable="false" Precision="0"/>
+                <Property Name="LendingID" Type="Edm.Int64" Nullable="false"/>
+                <Property Name="ReturnDate" Type="Edm.DateTimeOffset" Nullable="true" Precision="0"/>
+                <Property Name="UserID" Type="Edm.Int64" Nullable="false"/>
+                <NavigationProperty Name="BorrowUser" Relationship="Self.User_to_Lendings" FromRole="LendingPrincipal" ToRole="UserDependent"/>
+                <NavigationProperty Name="LendingBook" Relationship="Self.Book_to_Lendings" FromRole="LendingPrincipal" ToRole="BookDependent"/>
+            </EntityType>
+            <EntityType Name="User">
+                <Key>
+                    <PropertyRef Name="UserID"/>
+                </Key>
+                <Property Name="Email" Type="Edm.String" Nullable="true" MaxLength="100"/>
+                <Property Name="Name" Type="Edm.String" Nullable="false" MaxLength="100"/>
+                <Property Name="UserID" Type="Edm.Int64" Nullable="false"/>
+                <NavigationProperty Name="Lendings" Relationship="Self.User_to_Lendings" FromRole="UserDependent" ToRole="LendingPrincipal"/>
+            </EntityType>
+            <Association Name="Book_to_Lendings">
+                <End Type="Self.Book" Multiplicity="1" Role="BookDependent"/>
+                <End Type="Self.Lending" Multiplicity="*" Role="LendingPrincipal"/>
+            </Association>
+            <Association Name="User_to_Lendings">
+                <End Type="Self.User" Multiplicity="1" Role="UserDependent"/>
+                <End Type="Self.Lending" Multiplicity="*" Role="LendingPrincipal"/>
+            </Association>
+            <EntityContainer Name="Ilibrary_nsService" m:IsDefaultEntityContainer="true">
+                <Annotation Term="SQL.TrackChanges" xmlns="http://docs.oasis-open.org/odata/ns/edm"/>
+                <EntitySet Name="BookSet" EntityType="Self.Book"/>
+                <EntitySet Name="LendingSet" EntityType="Self.Lending"/>
+                <EntitySet Name="UserSet" EntityType="Self.User"/>
+                <AssociationSet Name="BookSet_to_LendingSet" Association="Self.Book_to_Lendings">
+                    <End EntitySet="BookSet" Role="BookDependent"/>
+                    <End EntitySet="LendingSet" Role="LendingPrincipal"/>
+                </AssociationSet>
+                <AssociationSet Name="UserSet_to_LendingSet" Association="Self.User_to_Lendings">
+                    <End EntitySet="UserSet" Role="UserDependent"/>
+                    <End EntitySet="LendingSet" Role="LendingPrincipal"/>
+                </AssociationSet>
+                <FunctionImport Name="BorrowBook" IsSideEffecting="true" m:HttpMethod="POST" ReturnType="Edm.Boolean">
+                    <Parameter Name="UserId" Type="Edm.Int64" Nullable="false"/>
+                    <Parameter Name="BookId" Type="Edm.Int64" Nullable="false"/>
+                </FunctionImport>
+            </EntityContainer>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
